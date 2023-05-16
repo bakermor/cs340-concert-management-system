@@ -1,0 +1,217 @@
+<html>
+  <head>
+    <title>Venues</title>
+    <script language="JavaScript">
+      function showform(dowhat) {
+        /*
+         * four DIVS: browse, insert, update, delete
+         * this function sets one visible the others not
+         */
+        if (dowhat == "insert") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "update") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "delete") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "block";
+        } else if (dowhat == "all") {
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "block";
+        } else {
+          //by default display browse
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        }
+      }
+      function newVenue() {
+        showform("insert");
+      }
+      function updateVenue(pid) {
+        showform("update");
+      }
+      function deleteVenue(pid) {
+        showform("delete");
+      }
+      function browseVenues() {
+        showform("browse");
+      }
+      function showAll() {
+        showform("all");
+      }
+    </script>
+  </head>
+
+  <body onload="browseVenues()">
+
+    <div>
+        <a href="/venues">Venues </a> | 
+        <a href="/artists">Artists </a> | 
+        <a href="/customers">Customers</a> | 
+        <a href="/concerts">Concerts</a> | 
+        <a href="/ticketsales">TicketSales</a> | 
+        <a href="/concerts_ticketsales">Concerts_TicketSales</a>
+    </div>
+
+    <h1>Venues</h1>
+    <div id="browse">
+      <p><a href="#" onclick="showAll()">Display all forms</a></p>
+      <table border="1" cellpadding="5">
+        <tr>
+            <th><a href="#" onclick="newVenue()">New</a></th>
+            <th></th>
+            <th>ID</th>
+            <th>Address</th>
+            <th>Capacity</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+        </tr>
+        <tr>
+            <td>
+                <a href="#" onclick="updateVenue('this.VenueID')">Edit</a>
+            </td>
+            <td>
+                <a href="#" onclick="deleteVenue('this.VenueID')">Delete</a>
+            </td>
+            <td>1</td>
+            <td>26617 NE 120th St, Big Tree, WA 98019</td>
+            <td>20,000</td>
+            <td>venue1@email.com</td>
+            <td>1111-222-2222</td>
+        </tr>
+        <tr>
+          <td>
+              <a href="#" onclick="updateVenue('this.VenueID')">Edit</a>
+          </td>
+          <td>
+              <a href="#" onclick="deleteVenue('this.VenueID')">Delete</a>
+          </td>
+          <td>2</td>
+          <td>2348 N Mountain Rd, Placeville, CA 95947</td>
+          <td>15,000</td>
+          <td>venue2@email.com</td>
+          <td>1010-221-6622</td>
+      </tr>
+      <tr>
+          <td>
+              <a href="#" onclick="updateVenue('this.VenueID')">Edit</a>
+          </td>
+          <td>
+              <a href="#" onclick="deleteVenue('this.VenueID')">Delete</a>
+          </td>
+          <td>3</td>
+          <td>5901 Place Ave, Queens, NY 11378</td>
+          <td>30,000</td>
+          <td>venue3@email.com</td>
+          <td>666-666-0000</td>
+    </tr>
+      </table>
+      <p>&nbsp;</p>
+    </div>
+    <!-- browse -->
+
+    <div id="insert">
+      <form method="POST" id="addVenue">
+        <legend><strong>Add Venue</strong></legend>
+        <fieldset class="fields">
+          <label> address </label> <input type="text" name="address" />
+          <label> capacity </label> <input type="text" name="capacity" />
+          <label> email </label> <input type="text" name="email" />
+          <label> phone number </label>
+          <input type="text" name="phone_number" />
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="addVenue"
+          value="Add Venue"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseVenues()"
+        />
+      </form>
+    </div>
+    <!-- insert -->
+    <p>&nbsp;</p>
+
+    <div id="update">
+      <form method="POST" id="UpdateVenue">
+        <legend><strong>Update Venue</strong></legend>
+        <fieldset class="fields">
+          <input
+            type="hidden"
+            name="VenueID"
+            id="updateVenueID"
+            value="1"
+          />
+          <label> ID: </label> 1
+          <label> address </label>
+          <input type="text" name="address" />
+          <label> capacity </label>
+          <input type="text" name="capacity" />
+          <label> email </label>
+          <input type="text" name="email" value="marysm@email.com" />
+          <label> phone number </label>
+          <input type="text" name="phone_number" value="111-121-1161" />
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="UpdateVenue"
+          value="Update Venue"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseVenues()"
+        />
+      </form>
+    </div>
+    <!-- update -->
+    <p>&nbsp;</p>
+
+    <div id="delete" style="display: block">
+      <form method="POST" id="deleteVenue">
+        <legend><strong>Delete Venue</strong></legend>
+        <fieldset class="fields">
+          <p>Are you sure you wish to delete the following?</p>
+          <input
+            type="hidden"
+            name="VenueID"
+            id="deleteVenueID"
+            value="1"
+          />
+          <label><strong>ID:</strong></label> 1
+          <label> <strong>address:</strong> </label> 26617 NE 120th St, Big Tree, WA 98019
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="DeleteVenue"
+          value="Delete Venue"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseVenues()"
+        />
+      </form>
+    </div>
+  </body>
+</html>
