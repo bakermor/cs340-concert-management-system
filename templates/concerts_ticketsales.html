@@ -1,0 +1,220 @@
+<html>
+  <head>
+    <title>Concerts_TicketSales</title>
+    <script language="JavaScript">
+      function showform(dowhat) {
+        /*
+         * four DIVS: browse, insert, update, delete
+         * this function sets one visible the others not
+         */
+        if (dowhat == "insert") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "update") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "delete") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "block";
+        } else if (dowhat == "all") {
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "block";
+        } else {
+          //by default display browse
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        }
+      }
+      function newConcertSale() {
+        showform("insert");
+      }
+      function updateConcertSale(pid) {
+        showform("update");
+      }
+      function deleteConcertSale(pid) {
+        showform("delete");
+      }
+      function browseConcertSales() {
+        showform("browse");
+      }
+      function showAll() {
+        showform("all");
+      }
+    </script>
+  </head>
+
+  <body onload="browseConcertSales()">
+
+    <div>
+      <a href="/venues">Venues </a> | 
+      <a href="/artists">Artists </a> | 
+      <a href="/customers">Customers</a> | 
+      <a href="/concerts">Concerts</a> | 
+      <a href="/ticketsales">TicketSales</a> | 
+      <a href="/concerts_ticketsales">Concerts_TicketSales</a>
+    </div>
+
+    <h1>Concerts_TicketSales</h1>
+    <div id="browse">
+      <p><a href="#" onclick="showAll()">Display all forms</a></p>
+      <table border="1" cellpadding="5">
+        <tr>
+          <th><a href="#" onclick="newConcertSale()">New</a></th>
+          <th></th>
+          <th>concert_sale_id</th>
+          <th>sale_number</th>
+          <th>concert_id</th>
+        </tr>
+        <tr>
+          <td>
+            <a href="#" onclick="updateConcertSale('this.concert_saleID')"
+              >Edit</a
+            >
+          </td>
+          <td>
+            <a href="#" onclick="deleteConcertSale('this.concert_saleID')"
+              >Delete</a
+            >
+          </td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="#" onclick="updateConcertSale('this.concert_saleID')"
+              >Edit</a
+            >
+          </td>
+          <td>
+            <a href="#" onclick="deleteConcertSale('this.concert_saleID')"
+              >Delete</a
+            >
+          </td>
+          <td>2</td>
+          <td>3</td>
+          <td>1</td>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+    </div>
+    <!-- browse -->
+
+    <div id="insert">
+      <form method="POST" id="addConcertSale">
+        <legend><strong>Add Concert Sale</strong></legend>
+        <fieldset class="fields">
+          <label> sale number </label>
+          <select name="sale_number">
+            <option value="0">&nbsp;</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+          <label> concert id </label>
+          <select name="concert_id">
+            <option value="0">&nbsp;</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="addConcertSale"
+          value="Add Concert Sale"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseConcertSales()"
+        />
+      </form>
+    </div>
+    <!-- insert -->
+    <p>&nbsp;</p>
+
+    <div id="update">
+      <form method="POST" id="updateConcertSale">
+        <legend><strong>Update Concert Sale</strong></legend>
+        <fieldset class="fields">
+          <input
+            type="hidden"
+            name="concert_saleID"
+            id="updateconcertsaleID"
+            value="1"
+          />
+          <label> sale number </label>
+          <select name="sale_number">
+            <option value="0">&nbsp;</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+          <label> concert id </label>
+          <select name="concert_id">
+            <option value="0">&nbsp;</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="UpdateConcertSale"
+          value="Update Concert Sale"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseConcertSales()"
+        />
+      </form>
+    </div>
+    <!-- update -->
+    <p>&nbsp;</p>
+
+    <div id="delete" style="display: block">
+      <form method="POST" id="deleteConcertSale">
+        <legend><strong>Delete Concert Sale</strong></legend>
+        <fieldset class="fields">
+          <p>Are you sure you wish to delete the following?</p>
+          <input
+            type="hidden"
+            name="concert_saleID"
+            id="deleteconcertsaleID"
+            value="1"
+          />
+          <label> <strong>Sale Number:</strong> </label> 1
+          <label> <strong>Concert ID:</strong> </label> 1
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="DeleteConcertSale"
+          value="Delete Concert Sale"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseConcertSales()"
+        />
+      </form>
+    </div>
+  </body>
+</html>
