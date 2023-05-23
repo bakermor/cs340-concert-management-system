@@ -1,7 +1,18 @@
 from flask import Flask, redirect, url_for, render_template, request
+import mysql.connector
 
 app = Flask(__name__)
 port_number = 27205
+
+def connect():
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="340_project"
+    )
+    mycursor = mydb.cursor()
+    return mycursor
 
 # index Page
 @app.route("/")
@@ -9,8 +20,29 @@ def index():
     return render_template("index.html")
 
 # venues Page
-@app.route("/venues")
+@app.route("/venues", methods=["GET", "POST", "PUT", "DELETE"])
 def venues():
+    mycursor = connect()
+    if request.method == "GET":
+        pass
+
+    if request.method == "POST":
+        pass
+
+    if request.method == "PUT":
+        venue_id = request.form["venue_id"]
+        address = request.form["address"]
+        capacity = int(request.form["capacity"])
+        email = request.form["email"]
+        phone_number = request.form["phone_number"]
+
+        command = "UPDATE Venues SET address = %s, capacity = %d, email = %s, phone_number = %s \
+            WHERE venue_id = %d;"
+        mycursor.execute(command, (address, capacity, email, phone_number, venue_id))
+
+    if request.method == "DELETE":
+        pass
+
     return render_template("venues.html")
 
 # venues Page
