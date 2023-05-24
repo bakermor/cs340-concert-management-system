@@ -23,12 +23,31 @@ def index():
 # venues Page
 @app.route("/venues", methods=["GET", "POST"])
 def venues():
+    # READ
+    if request.method == 'GET':
+        # SQL select Venues table data
+        query = 'SELECT address, capacity, email, phone_number FROM Venues;'
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        venue_data = cur.fetchall()
+        # render table through .j2 file
+        return render_template('venues.j2', venues=venue_data)
 
-    if request.method == "GET":
-        pass
-
-    if request.method == "POST":
-        print(request.form)
+    # CREATE
+    elif request.method == 'POST':
+         # user clicks 'new'
+        if request.form.get('insert_venue'):
+            address = request.form['address']
+            capacity = request.form['capacity']
+            email = request.form['email']
+            phone_number = request.form['phone_number']
+            # insert new row into Venues
+            query = 'INSERT INTO Venues (address, capacity, email, phone_number) VALUES (%s, %s, %s, %s);'
+            cur = mysql.connection.cursor()
+            cur.execute(query, (address, capacity, email, phone_number))
+            mysql.connection.commit()
+            # redirect to /venues
+            return redirect('/venues')
         
         if request.form["method"] == "put":
             venue_id = int(request.form["venue_id"])
