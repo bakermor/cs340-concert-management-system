@@ -4,7 +4,7 @@ import mysql.connector
 app = Flask(__name__)
 port_number = 27205
 
-def connect(command, values):
+def connect(command, values=None):
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
@@ -12,8 +12,14 @@ def connect(command, values):
         database="340_project"
     )
     mycursor = mydb.cursor()
-    mycursor.execute(command, values)
-    mydb.commit()
+    if values:
+        mycursor.execute(command, values)
+        mydb.commit()
+    else:
+        mycursor.execute(command)
+
+    if 'SELECT' in command:
+        return mycursor.fetchall()
 
 # index Page
 @app.route("/")
@@ -27,9 +33,8 @@ def venues():
     if request.method == 'GET':
         # SQL select Venues table data
         query = 'SELECT address, capacity, email, phone_number FROM Venues;'
-        cur = mysql.connection.cursor()
-        cur.execute(query)
-        venue_data = cur.fetchall()
+        venue_data = connect(query)
+        print(venue_data)
         # render table through .j2 file
         return render_template('venues.j2', venues=venue_data)
 
@@ -43,11 +48,10 @@ def venues():
             phone_number = request.form['phone_number']
             # insert new row into Venues
             query = 'INSERT INTO Venues (address, capacity, email, phone_number) VALUES (%s, %s, %s, %s);'
-            cur = mysql.connection.cursor()
-            cur.execute(query, (address, capacity, email, phone_number))
-            mysql.connection.commit()
+            values = (address, capacity, email, phone_number)
+            connect(query, values)
             # redirect to /venues
-            return redirect('/venues')
+            return render_template("venues.html")
         
         if request.form["method"] == "put":
             venue_id = int(request.form["venue_id"])
