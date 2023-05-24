@@ -40,6 +40,13 @@ def venues():
             command = "UPDATE Venues SET address = %s, capacity = %s, email = %s, phone_number = %s WHERE venue_id = %s;"
             values = (address, capacity, email, phone_number, venue_id)
             connect(command, values)
+        
+        if request.form["method"] == "delete":
+            venue_id = int(request.form["venue_id"])
+
+            command = "DELETE FROM Venues WHERE venue_id = %s"
+            values = (venue_id,)
+            connect(command, values)
 
     return render_template("venues.html")
 
