@@ -1,0 +1,26 @@
+<table>
+    <thead>
+    <tr>
+        <th>Address</th>
+        <th>Capacity</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+    </tr>
+    <tbody>
+    {% for item in venues %}
+    <tr>
+        <td>{{item['address']}}</td>
+        <td>{{item['capacity']}}</td>
+        <td>{{item['email']}}</td>
+        <td>{{item['phone_number']}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<form id='insert_venue' action='/venues' method='post'>
+    <input type='text' name='address'>
+    <input type='number' name='capacity'>
+    <input type='text' name='email'>
+    <input type='text' name='phone_number'>
+    <input type='submit' value='insert venue', name='insert_venue'>
+</form>
