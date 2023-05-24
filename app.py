@@ -32,11 +32,11 @@ def venues():
     # READ
     if request.method == 'GET':
         # SQL select Venues table data
-        query = 'SELECT address, capacity, email, phone_number FROM Venues;'
+        query = 'SELECT * FROM Venues;'
         venue_data = connect(query)
         print(venue_data)
         # render table through .j2 file
-        return render_template('venues.j2', venues=venue_data)
+        return render_template('venues.html', venues=venue_data)
 
     # CREATE
     elif request.method == 'POST':
@@ -51,7 +51,7 @@ def venues():
             values = (address, capacity, email, phone_number)
             connect(query, values)
             # redirect to /venues
-            return render_template("venues.html")
+            return redirect("/venues")
         
         if request.form["method"] == "put":
             venue_id = int(request.form["venue_id"])
@@ -63,6 +63,7 @@ def venues():
             command = "UPDATE Venues SET address = %s, capacity = %s, email = %s, phone_number = %s WHERE venue_id = %s;"
             values = (address, capacity, email, phone_number, venue_id)
             connect(command, values)
+            return redirect("/venues")
         
         if request.form["method"] == "delete":
             venue_id = int(request.form["venue_id"])
@@ -70,8 +71,7 @@ def venues():
             command = "DELETE FROM Venues WHERE venue_id = %s"
             values = (venue_id,)
             connect(command, values)
-
-    return render_template("venues.html")
+            return redirect("/venues")
 
 # artists Page
 @app.route("/artists")
