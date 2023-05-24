@@ -38,9 +38,32 @@
       function newVenue() {
         showform("insert");
       }
+
       function updateVenue(pid) {
+        var table = document.getElementById("venue_table");
+        var data = table.getElementsByTagName("td");
+
+        for (var i = 2; i < data.length; i += 7) {
+          console.log(data[i].innerText);
+          if (data[i].innerText == pid) {
+            var address = data[i + 1].innerText;
+            var capacity = data[i + 2].innerText;
+            var email = data[i + 3].innerText;
+            var phone_number = data[i + 4].innerText;
+
+            document.getElementById("update_venue_id").value = pid;
+            document.getElementById("update_id").innerText = ` ID: ${pid} `;
+            document.getElementById("update_address").value = address;
+            document.getElementById("update_capacity").value = capacity;
+            document.getElementById("update_email").value = email;
+            document.getElementById("update_phone_number").value = phone_number;
+            break;
+          }
+        }
+
         showform("update");
       }
+
       function deleteVenue(pid) {
         showform("delete");
       }
@@ -54,68 +77,65 @@
   </head>
 
   <body onload="browseVenues()">
-
     <div>
-        <a href="/venues">Venues </a> | 
-        <a href="/artists">Artists </a> | 
-        <a href="/customers">Customers</a> | 
-        <a href="/concerts">Concerts</a> | 
-        <a href="/ticketsales">TicketSales</a> | 
-        <a href="/concerts_ticketsales">Concerts_TicketSales</a>
+      <a href="/venues">Venues </a> | <a href="/artists">Artists </a> |
+      <a href="/customers">Customers</a> | <a href="/concerts">Concerts</a> |
+      <a href="/ticketsales">TicketSales</a> |
+      <a href="/concerts_ticketsales">Concerts_TicketSales</a>
     </div>
 
     <h1>Venues</h1>
     <div id="browse">
       <p><a href="#" onclick="showAll()">Display all forms</a></p>
-      <table border="1" cellpadding="5">
+      <table id="venue_table" border="1" cellpadding="5">
         <tr>
-            <th><a href="#" onclick="newVenue()">New</a></th>
-            <th></th>
-            <th>ID</th>
-            <th>Address</th>
-            <th>Capacity</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-        </tr>
-        <tr>
-            <td>
-                <a href="#" onclick="updateVenue('this.VenueID')">Edit</a>
-            </td>
-            <td>
-                <a href="#" onclick="deleteVenue('this.VenueID')">Delete</a>
-            </td>
-            <td>1</td>
-            <td>26617 NE 120th St, Big Tree, WA 98019</td>
-            <td>20,000</td>
-            <td>venue1@email.com</td>
-            <td>1111-222-2222</td>
+          <th><a href="#" onclick="newVenue()">New</a></th>
+          <th></th>
+          <th>ID</th>
+          <th>Address</th>
+          <th>Capacity</th>
+          <th>Email</th>
+          <th>Phone Number</th>
         </tr>
         <tr>
           <td>
-              <a href="#" onclick="updateVenue('this.VenueID')">Edit</a>
+            <a href="#" onclick="updateVenue('1')">Edit</a>
           </td>
           <td>
-              <a href="#" onclick="deleteVenue('this.VenueID')">Delete</a>
+            <a href="#" onclick="deleteVenue('1')">Delete</a>
+          </td>
+          <td>1</td>
+          <td>26617 NE 120th St, Big Tree, WA 98019</td>
+          <td>20000</td>
+          <td>venue1@email.com</td>
+          <td>1111-222-2222</td>
+        </tr>
+        <tr>
+          <td>
+            <a href="#" onclick="updateVenue('2')">Edit</a>
+          </td>
+          <td>
+            <a href="#" onclick="deleteVenue('2')">Delete</a>
           </td>
           <td>2</td>
           <td>2348 N Mountain Rd, Placeville, CA 95947</td>
-          <td>15,000</td>
+          <td>15000</td>
           <td>venue2@email.com</td>
           <td>1010-221-6622</td>
-      </tr>
-      <tr>
+        </tr>
+        <tr>
           <td>
-              <a href="#" onclick="updateVenue('this.VenueID')">Edit</a>
+            <a href="#" onclick="updateVenue('3')">Edit</a>
           </td>
           <td>
-              <a href="#" onclick="deleteVenue('this.VenueID')">Delete</a>
+            <a href="#" onclick="deleteVenue('3')">Delete</a>
           </td>
           <td>3</td>
           <td>5901 Place Ave, Queens, NY 11378</td>
-          <td>30,000</td>
+          <td>30000</td>
           <td>venue3@email.com</td>
           <td>666-666-0000</td>
-    </tr>
+        </tr>
       </table>
       <p>&nbsp;</p>
     </div>
@@ -131,12 +151,7 @@
           <label> phone number </label>
           <input type="text" name="phone_number" />
         </fieldset>
-        <input
-          class="btn"
-          type="submit"
-          id="addVenue"
-          value="Add Venue"
-        />
+        <input class="btn" type="submit" id="addVenue" value="Add Venue" />
         <input
           class="btn"
           type="button"
@@ -152,21 +167,22 @@
       <form method="POST" id="UpdateVenue">
         <legend><strong>Update Venue</strong></legend>
         <fieldset class="fields">
+          <input type="hidden" name="method" value="put" />
+          <input type="hidden" name="venue_id" id="update_venue_id" value="" />
+          <label id="update_id"> ID: </label>
+          <label> address: </label>
+          <input type="text" id="update_address" name="address" value="" />
+          <label> capacity: </label>
+          <input type="text" id="update_capacity" name="capacity" value="" />
+          <label> email: </label>
+          <input type="text" id="update_email" name="email" value="" />
+          <label> phone number: </label>
           <input
-            type="hidden"
-            name="VenueID"
-            id="updateVenueID"
-            value="1"
+            type="text"
+            id="update_phone_number"
+            name="phone_number"
+            value=""
           />
-          <label> ID: </label> 1
-          <label> address </label>
-          <input type="text" name="address" />
-          <label> capacity </label>
-          <input type="text" name="capacity" />
-          <label> email </label>
-          <input type="text" name="email" value="marysm@email.com" />
-          <label> phone number </label>
-          <input type="text" name="phone_number" value="111-121-1161" />
         </fieldset>
         <input
           class="btn"
@@ -190,14 +206,10 @@
         <legend><strong>Delete Venue</strong></legend>
         <fieldset class="fields">
           <p>Are you sure you wish to delete the following?</p>
-          <input
-            type="hidden"
-            name="VenueID"
-            id="deleteVenueID"
-            value="1"
-          />
+          <input type="hidden" name="VenueID" id="deleteVenueID" value="1" />
           <label><strong>ID:</strong></label> 1
-          <label> <strong>address:</strong> </label> 26617 NE 120th St, Big Tree, WA 98019
+          <label> <strong>address:</strong> </label> 26617 NE 120th St, Big
+          Tree, WA 98019
         </fieldset>
         <input
           class="btn"
