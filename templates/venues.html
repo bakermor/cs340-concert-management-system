@@ -100,6 +100,8 @@
     <h1>Venues</h1>
     <div id="browse">
       <p><a href="#" onclick="showAll()">Display all forms</a></p>
+
+      {% if not venues %}
       <table id="venue_table" border="1" cellpadding="5">
         <tr>
           <th><a href="#" onclick="newVenue()">New</a></th>
@@ -110,52 +112,49 @@
           <th>Email</th>
           <th>Phone Number</th>
         </tr>
-        <tr>
-          <td>
-            <a href="#" onclick="updateVenue('1')">Edit</a>
-          </td>
-          <td>
-            <a href="#" onclick="deleteVenue('1')">Delete</a>
-          </td>
-          <td>1</td>
-          <td>26617 NE 120th St, Big Tree, WA 98019</td>
-          <td>20000</td>
-          <td>venue1@email.com</td>
-          <td>1111-222-2222</td>
-        </tr>
-        <tr>
-          <td>
-            <a href="#" onclick="updateVenue('2')">Edit</a>
-          </td>
-          <td>
-            <a href="#" onclick="deleteVenue('2')">Delete</a>
-          </td>
-          <td>2</td>
-          <td>2348 N Mountain Rd, Placeville, CA 95947</td>
-          <td>15000</td>
-          <td>venue2@email.com</td>
-          <td>1010-221-6622</td>
-        </tr>
-        <tr>
-          <td>
-            <a href="#" onclick="updateVenue('3')">Edit</a>
-          </td>
-          <td>
-            <a href="#" onclick="deleteVenue('3')">Delete</a>
-          </td>
-          <td>3</td>
-          <td>5901 Place Ave, Queens, NY 11378</td>
-          <td>30000</td>
-          <td>venue3@email.com</td>
-          <td>666-666-0000</td>
-        </tr>
+        <tr></tr>
       </table>
+
+      {% else %}
+      <table id="venue_table" border="1" cellpadding="5">
+        <thead>
+          <tr>
+            <th><a href="#" onclick="newVenue()">New</a></th>
+            <th></th>
+            <th>ID</th>
+            <th>Address</th>
+            <th>Capacity</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for item in venues %}
+          <tr>
+            <td>
+              <a href="#" onclick="updateVenue('{{item[0]}}')">Edit</a>
+            </td>
+            <td>
+              <a href="#" onclick="deleteVenue('{{item[0]}}')">Delete</a>
+            </td>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td>{{item[2]}}</td>
+            <td>{{item[3]}}</td>
+            <td>{{item[4]}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+
       <p>&nbsp;</p>
     </div>
     <!-- browse -->
 
     <div id="insert">
-      <form method="POST" id="addVenue">
+      <form id="insert_venue" action="/venues" method="post">
         <legend><strong>Add Venue</strong></legend>
         <fieldset class="fields">
           <label> address </label> <input type="text" name="address" />
@@ -164,7 +163,7 @@
           <label> phone number </label>
           <input type="text" name="phone_number" />
         </fieldset>
-        <input class="btn" type="submit" id="addVenue" value="Add Venue" />
+        <input type="submit" value="insert venue" , name="insert_venue" />
         <input
           class="btn"
           type="button"
