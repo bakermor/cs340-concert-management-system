@@ -44,7 +44,6 @@
         var data = table.getElementsByTagName("td");
 
         for (var i = 2; i < data.length; i += 7) {
-          console.log(data[i].innerText);
           if (data[i].innerText == pid) {
             var address = data[i + 1].innerText;
             var capacity = data[i + 2].innerText;
@@ -65,8 +64,22 @@
       }
 
       function deleteVenue(pid) {
+        var table = document.getElementById("venue_table");
+        var data = table.getElementsByTagName("td");
+
+        for (var i = 2; i < data.length; i += 7) {
+          if (data[i].innerText == pid) {
+            var address = data[i + 1].innerText;
+
+            document.getElementById("delete_venue_id").value = pid;
+            document.getElementById("delete_id").innerText = pid;
+            document.getElementById("delete_address").innerText = address;
+          }
+        }
+
         showform("delete");
       }
+
       function browseVenues() {
         showform("browse");
       }
@@ -206,10 +219,11 @@
         <legend><strong>Delete Venue</strong></legend>
         <fieldset class="fields">
           <p>Are you sure you wish to delete the following?</p>
-          <input type="hidden" name="VenueID" id="deleteVenueID" value="1" />
-          <label><strong>ID:</strong></label> 1
-          <label> <strong>address:</strong> </label> 26617 NE 120th St, Big
-          Tree, WA 98019
+          <input type="hidden" name="method" value="delete" />
+          <input type="hidden" name="venue_id" id="delete_venue_id" value="" />
+          <label><strong>ID:</strong> </label><span id="delete_id"></span>
+          <label> <strong>address:</strong> </label
+          ><span id="delete_address"></span>
         </fieldset>
         <input
           class="btn"
