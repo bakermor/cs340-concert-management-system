@@ -1,0 +1,243 @@
+<html>
+  <head>
+    <title>Venues</title>
+    <script language="JavaScript">
+      function showform(dowhat) {
+        /*
+         * four DIVS: browse, insert, update, delete
+         * this function sets one visible the others not
+         */
+        if (dowhat == "insert") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "update") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "delete") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "block";
+        } else if (dowhat == "all") {
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "block";
+        } else {
+          //by default display browse
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        }
+      }
+      function newVenue() {
+        showform("insert");
+      }
+
+      function updateVenue(pid) {
+        var table = document.getElementById("venue_table");
+        var data = table.getElementsByTagName("td");
+
+        for (var i = 2; i < data.length; i += 7) {
+          if (data[i].innerText == pid) {
+            var address = data[i + 1].innerText;
+            var capacity = data[i + 2].innerText;
+            var email = data[i + 3].innerText;
+            var phone_number = data[i + 4].innerText;
+
+            document.getElementById("update_venue_id").value = pid;
+            document.getElementById("update_id").innerText = ` ID: ${pid} `;
+            document.getElementById("update_address").value = address;
+            document.getElementById("update_capacity").value = capacity;
+            document.getElementById("update_email").value = email;
+            document.getElementById("update_phone_number").value = phone_number;
+            break;
+          }
+        }
+
+        showform("update");
+      }
+
+      function deleteVenue(pid) {
+        var table = document.getElementById("venue_table");
+        var data = table.getElementsByTagName("td");
+
+        for (var i = 2; i < data.length; i += 7) {
+          if (data[i].innerText == pid) {
+            var address = data[i + 1].innerText;
+
+            document.getElementById("delete_venue_id").value = pid;
+            document.getElementById("delete_id").innerText = pid;
+            document.getElementById("delete_address").innerText = address;
+          }
+        }
+
+        showform("delete");
+      }
+
+      function browseVenues() {
+        showform("browse");
+      }
+      function showAll() {
+        showform("all");
+      }
+    </script>
+  </head>
+
+  <body onload="browseVenues()">
+    <div>
+      <a href="/venues">Venues </a> | <a href="/artists">Artists </a> |
+      <a href="/customers">Customers</a> | <a href="/concerts">Concerts</a> |
+      <a href="/ticketsales">TicketSales</a> |
+      <a href="/concerts_ticketsales">Concerts_TicketSales</a>
+    </div>
+
+    <h1>Venues</h1>
+    <div id="browse">
+      <p><a href="#" onclick="showAll()">Display all forms</a></p>
+
+      {% if not venues %}
+      <table id="venue_table" border="1" cellpadding="5">
+        <tr>
+          <th><a href="#" onclick="newVenue()">New</a></th>
+          <th></th>
+          <th>ID</th>
+          <th>Address</th>
+          <th>Capacity</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+        </tr>
+        <tr></tr>
+      </table>
+
+      {% else %}
+      <table id="venue_table" border="1" cellpadding="5">
+        <thead>
+          <tr>
+            <th><a href="#" onclick="newVenue()">New</a></th>
+            <th></th>
+            <th>ID</th>
+            <th>Address</th>
+            <th>Capacity</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for item in venues %}
+          {% set ven_id = item['venue_id'] %}
+          <tr>
+            <td>
+              <a href="#" onclick="updateVenue('{{ven_id}}')">Edit</a>
+            </td>
+            <td>
+              <a href="#" onclick="deleteVenue('{{ven_id}}')">Delete</a>
+            </td>
+            <td>{{item['venue_id']}}</td>
+            <td>{{item['address']}}</td>
+            <td>{{item['capacity']}}</td>
+            <td>{{item['email']}}</td>
+            <td>{{item['phone_number']}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+
+      <p>&nbsp;</p>
+    </div>
+    <!-- browse -->
+
+    <div id="insert">
+      <form id="insert_venue" action="/venues" method="post">
+        <legend><strong>Add Venue</strong></legend>
+        <fieldset class="fields">
+          <label> address </label> <input type="text" name="address" />
+          <label> capacity </label> <input type="text" name="capacity" />
+          <label> email </label> <input type="text" name="email" />
+          <label> phone number </label>
+          <input type="text" name="phone_number" />
+        </fieldset>
+        <input type="submit" value="insert venue" , name="insert_venue" />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseVenues()"
+        />
+      </form>
+    </div>
+    <!-- insert -->
+    <p>&nbsp;</p>
+
+    <div id="update">
+      <form method="POST" id="UpdateVenue">
+        <legend><strong>Update Venue</strong></legend>
+        <fieldset class="fields">
+          <input type="hidden" name="method" value="put" />
+          <input type="hidden" name="venue_id" id="update_venue_id" value="" />
+          <label id="update_id"> ID: </label>
+          <label> address: </label>
+          <input type="text" id="update_address" name="address" value="" />
+          <label> capacity: </label>
+          <input type="text" id="update_capacity" name="capacity" value="" />
+          <label> email: </label>
+          <input type="text" id="update_email" name="email" value="" />
+          <label> phone number: </label>
+          <input
+            type="text"
+            id="update_phone_number"
+            name="phone_number"
+            value=""
+          />
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="UpdateVenue"
+          value="Update Venue"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseVenues()"
+        />
+      </form>
+    </div>
+    <!-- update -->
+    <p>&nbsp;</p>
+
+    <div id="delete" style="display: block">
+      <form method="POST" id="deleteVenue">
+        <legend><strong>Delete Venue</strong></legend>
+        <fieldset class="fields">
+          <p>Are you sure you wish to delete the following?</p>
+          <input type="hidden" name="method" value="delete" />
+          <input type="hidden" name="venue_id" id="delete_venue_id" value="" />
+          <label><strong>ID:</strong> </label><span id="delete_id"></span>
+          <label> <strong>address:</strong> </label
+          ><span id="delete_address"></span>
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="DeleteVenue"
+          value="Delete Venue"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseVenues()"
+        />
+      </form>
+    </div>
+  </body>
+</html>
