@@ -1,20 +1,23 @@
 from flask import Flask, redirect, url_for, render_template, request
-import mysql.connector
+from flask_mysqldb import MySQL
 
 app = Flask(__name__)
-port_number = 27205
+port_number = 35903
+
+app.config['MYSQL_HOST'] = "classmysql.engr.oregonstate.edu"
+app.config['MYSQL_USER'] = "cs340_bakermor"
+app.config['MYSQL_PASSWORD'] = "0384"
+app.config['MYSQL_DB'] = "cs340_bakermor"
+app.config['MYSQL_CURSORCLASS'] = "DictCursor"
+
+mysql = MySQL(app)
 
 def connect(command, values=None):
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="P4ssw0rd",
-        database="340_project"
-    )
-    mycursor = mydb.cursor()
+    
+    mycursor = mysql.connection.cursor()
     if values:
         mycursor.execute(command, values)
-        mydb.commit()
+        mysql.connection.commit()
     else:
         mycursor.execute(command)
 
@@ -34,9 +37,9 @@ def venues():
         # SQL select Venues table data
         query = 'SELECT * FROM Venues;'
         venue_data = connect(query)
-        print(venue_data)
         # render table through .j2 file
-        return render_template('venues.html', venues=venue_data)
+        print(venue_data)
+        return render_template('venues.j2', venues=venue_data)
 
     # CREATE
     elif request.method == 'POST':
@@ -73,7 +76,7 @@ def venues():
             connect(command, values)
             return redirect("/venues")
 
-# artists Page
+#artists Page
 @app.route("/artists")
 def artists():
     return render_template("artists.html")
