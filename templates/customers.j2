@@ -1,0 +1,254 @@
+<html>
+  <head>
+    <title>Customers</title>
+    <script language="JavaScript">
+      function showform(dowhat) {
+        /*
+         * four DIVS: browse, insert, update, delete
+         * this function sets one visible the others not
+         */
+        if (dowhat == "insert") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "update") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "delete") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "block";
+        } else if (dowhat == "all") {
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "block";
+        } else {
+          //by default display browse
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        }
+      }
+      function newCustomer() {
+        showform("insert");
+      }
+      function updateCustomer(pid) {
+        var table = document.getElementById("customer_table");
+        var data = table.getElementsByTagName("td");
+
+        for (var i = 2; i < data.length; i += 7) {
+          if (data[i].innerText == pid) {
+            var first_name = data[i + 1].innerText;
+            var last_name = data[i + 2].innerText;
+            var email = data[i + 3].innerText;
+            var phone_number = data[i + 4].innerText;
+
+            document.getElementById("update_customer_id").value = pid;
+            document.getElementById("update_id").innerText = ` ID: ${pid} `;
+            document.getElementById("update_first_name").value = first_name;
+            document.getElementById("update_last_name").value = last_name;
+            document.getElementById("update_email").value = email;
+            document.getElementById("update_phone_number").value = phone_number;
+            break;
+          }
+        }
+
+        showform("update");
+      }
+      function deleteCustomer(pid) {
+        var table = document.getElementById("customer_table");
+        var data = table.getElementsByTagName("td");
+
+        for (var i = 2; i < data.length; i += 7) {
+          if (data[i].innerText == pid) {
+            var first_name = data[i + 1].innerText;
+            var last_name = data[i + 2].innerText;
+
+            document.getElementById("delete_customer_id").value = pid;
+            document.getElementById("delete_id").innerText = pid;
+            document.getElementById("delete_first_name").innerText = first_name;
+            document.getElementById("delete_last_name").innerText = last_name;
+          }
+        }
+
+        showform("delete");
+      }
+      function browseCustomers() {
+        showform("browse");
+      }
+      function showAll() {
+        showform("all");
+      }
+    </script>
+  </head>
+
+  <body onload="browseCustomers()">
+    <div>
+      <a href="/venues">Venues </a> | <a href="/artists">Artists </a> |
+      <a href="/customers">Customers</a> | <a href="/concerts">Concerts</a> |
+      <a href="/ticketsales">TicketSales</a> |
+      <a href="/concerts_ticketsales">Concerts_TicketSales</a>
+    </div>
+
+    <h1>Customers</h1>
+    <div id="browse">
+      <p><a href="#" onclick="showAll()">Display all forms</a></p>
+
+      {% if not customers %}
+      <table id="customer_table" border="1" cellpadding="5">
+        <tr>
+          <th><a href="#" onclick="newCustomer()">New</a></th>
+          <th></th>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+        </tr>
+        <tr></tr>
+      </table>
+
+      {% else %}
+      <table id="customer_table" border="1" cellpadding="5">
+        <tr>
+          <th><a href="#" onclick="newCustomer()">New</a></th>
+          <th></th>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+        </tr>
+
+        {% for item in customers %} {% set cus_id = item['customer_id'] %}
+        <tr>
+          <td>
+            <a href="#" onclick="updateCustomer('{{cus_id}}')">Edit</a>
+          </td>
+          <td>
+            <a href="#" onclick="deleteCustomer('{{cus_id}}')">Delete</a>
+          </td>
+          <td>{{item['customer_id']}}</td>
+          <td>{{item['first_name']}}</td>
+          <td>{{item['last_name']}}</td>
+          <td>{{item['email']}}</td>
+          <td>{{item['phone_number']}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+
+      <p>&nbsp;</p>
+    </div>
+    <!-- browse -->
+
+    <div id="insert">
+      <form id="insert_customer" action="/customers" method="post">
+        <legend><strong>Add Customer</strong></legend>
+        <fieldset class="fields">
+          <label> first name </label> <input type="text" name="first_name" />
+          <label> last name </label> <input type="text" name="last_name" />
+          <label> email </label> <input type="text" name="email" />
+          <label> phone number </label>
+          <input type="text" name="phone_number" />
+        </fieldset>
+        <input type="submit" value="insert customer" name="insert_customer" />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseCustomers()"
+        />
+      </form>
+    </div>
+    <!-- insert -->
+    <p>&nbsp;</p>
+
+    <div id="update">
+      <form method="POST" id="UpdateCustomer">
+        <legend><strong>Update Customer</strong></legend>
+        <fieldset class="fields">
+          <input type="hidden" name="method" value="put" />
+          <input
+            type="hidden"
+            name="customer_id"
+            id="update_customer_id"
+            value=""
+          />
+          <label id="update_id"> ID: </label>
+          <label> first name: </label>
+          <input
+            type="text"
+            id="update_first_name"
+            name="first_name"
+            value=""
+          />
+          <label> last name: </label>
+          <input type="text" id="update_last_name" name="last_name" value="" />
+          <label> email: </label>
+          <input type="text" id="update_email" name="email" value="" />
+          <label> phone number: </label>
+          <input
+            type="text"
+            id="update_phone_number"
+            name="phone_number"
+            value=""
+          />
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="UpdateCustomer"
+          value="Update Customer"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseCustomers()"
+        />
+      </form>
+    </div>
+    <!-- update -->
+    <p>&nbsp;</p>
+
+    <div id="delete" style="display: block">
+      <form method="POST" id="deleteCustomer">
+        <legend><strong>Delete Customer</strong></legend>
+        <fieldset class="fields">
+          <p>Are you sure you wish to delete the following?</p>
+          <input type="hidden" name="method" value="delete" />
+          <input
+            type="hidden"
+            name="customer_id"
+            id="delete_customer_id"
+            value=""
+          />
+          <label><strong>ID:</strong> </label><span id="delete_id"></span>
+          <label> <strong>first name:</strong> </label
+          ><span id="delete_first_name"></span>
+          <label> <strong>last name:</strong> </label
+          ><span id="delete_last_name"></span>
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="DeleteCustomer"
+          value="Delete Customer"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseCustomers()"
+        />
+      </form>
+    </div>
+  </body>
+</html>
