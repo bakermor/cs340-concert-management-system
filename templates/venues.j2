@@ -130,8 +130,7 @@
         </thead>
 
         <tbody>
-          {% for item in venues %}
-          {% set ven_id = item['venue_id'] %}
+          {% for item in venues %} {% set ven_id = item['venue_id'] %}
           <tr>
             <td>
               <a href="#" onclick="updateVenue('{{ven_id}}')">Edit</a>
