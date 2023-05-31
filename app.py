@@ -2,7 +2,7 @@ from flask import Flask, redirect, url_for, render_template, request
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
-port_number = 35903
+port_number = 25693
 
 app.config['MYSQL_HOST'] = "classmysql.engr.oregonstate.edu"
 app.config['MYSQL_USER'] = "cs340_bakermor"
