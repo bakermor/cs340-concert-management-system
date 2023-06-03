@@ -1,0 +1,259 @@
+<html>
+  <head>
+    <title>TicketSales</title>
+    <script language="JavaScript">
+      function showform(dowhat) {
+        if (dowhat == "insert") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "update") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "delete") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "block";
+        } else if (dowhat == "all") {
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "block";
+        } else {
+          //by default display browse
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        }
+      }
+      function newTicketsale() {
+        showform("insert");
+      }
+
+      function updateTicketsale(pid, customer) {
+
+        var table = document.getElementById("ticketsale_table");
+        var data = table.getElementsByTagName("td");
+
+        // iterate through Sale Numbers in the browse table
+        // i += 6 | each row has 6 cells, i = 2 | Sale Number cell
+        for (var i = 2; i < data.length; i += 6) {
+          // if Sale Number matches row that user clicked
+          if (data[i].innerText == pid) {
+       
+            var sale_date = data[i + 1].innerText;
+            var amount_paid = data[i + 2].innerText;
+            var customer_id = data[i + 3].innerText;
+ 
+            document.getElementById("update_ticketsale_id").value = pid;
+            document.getElementById("update_id").innerText = ` ${pid} `;
+            document.getElementById("update_sale_date").value = sale_date;
+            document.getElementById("update_amount_paid").value = amount_paid;
+            document.getElementById("update_customer_id").value = customer;
+            break;
+          }
+        }
+
+        showform("update");
+      }
+
+      function deleteTicketsale(pid) {
+        var table = document.getElementById("ticketsale_table");
+        var data = table.getElementsByTagName("td");
+
+        for (var i = 2; i < data.length; i += 6) {
+          if (data[i].innerText == pid) {
+            var sale_date = data[i + 1].innerText;
+            var amount_paid = data[i + 2].innerText;
+            var customer_id = data[i + 3].innerText;
+
+            document.getElementById("delete_ticketsale_id").value = pid;
+            document.getElementById("delete_id").innerText = pid;
+            document.getElementById("delete_sale_date").innerText = sale_date;
+            document.getElementById("delete_amount_paid").innerText = amount_paid;
+            document.getElementById("delete_customer_id").innerText = customer_id;
+          }
+        }
+
+        showform("delete");
+      }
+
+      function browseTicketsales() {
+        showform("browse");
+      }
+      function showAll() {
+        showform("all");
+      }
+    </script>
+  </head>
+
+  <body onload="browseTicketsales()">
+    <div>
+      <a href="/artists">Artists</a> | <a href="/artists">Artists </a> |
+      <a href="/customers">Customers</a> | <a href="/concerts">Concerts</a> |
+      <a href="/ticketsales">TicketSales</a> |
+      <a href="/concerts_ticketsales">Concerts_TicketSales</a>
+    </div>
+
+    <h1>Ticketsales</h1>
+    <div id="browse">
+
+      {% if not ticketsales_data %}
+      <table id="ticketsale_table" border="1" cellpadding="5">
+        <tr>
+          <th><a href="#" onclick="newTicketsale()">New</a></th>
+          <th></th>
+          <th>ID</th>
+          <th>Address</th>
+          <th>Capacity</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+        </tr>
+        <tr></tr>
+      </table>
+
+      {% else %}
+      <table id="ticketsale_table" border="1" cellpadding="5">
+        <thead>
+          <tr>
+            <th><a href="#" onclick="newTicketsale()">New</a></th>
+            <th></th>
+            <th>Sale Number</th>
+            <th>Sale Date</th>
+            <th>Amount paid</th>
+            <th>Customer ID</th>
+          </tr>
+
+        </thead>
+        <tbody>
+          <tr>
+            {% for item in ticketsales_data %}
+            {% for cus in customer_data %} 
+              {% if cus['customer_id'] == item['customer_id'] %}
+            <td>
+              <a href="#" onclick="updateTicketsale('{{item['sale_number']}}', '{{cus['customer_id']}}')">Edit</a>
+            </td>
+              {% endif %}
+            {% endfor %}
+            <td>
+              <a href="#" onclick="deleteTicketsale('{{item['sale_number']}}')">Delete</a>
+            </td>
+            <td>{{item['sale_number']}}</td>
+            <td>{{item['sale_date']}}</td>
+            <td>{{item['amount_paid']}}</td>
+            <td>{{item['customer_id']}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+
+      <p>&nbsp;</p>
+    </div>
+    <!-- browse -->
+
+    <div id="insert">
+      <form id="insert_ticketsale" action="/ticketsales" method="post">
+        <legend><strong>Add Ticketsale</strong></legend>
+        <fieldset class="fields">
+          <label> sale date </label> <input type="text" name="sale_date" />
+          <label> amount paid </label> <input type="text" name="amount_paid" />
+          <label> customer_id </label>
+          <select name="customer_id">
+            <option value="0">&nbsp;</option>
+            {% for cus in customer_data %}
+            <option value="{{cus['customer_id']}}">{{cus['customer_id']}}</option>
+            {% endfor %}
+          </select>
+        </fieldset>
+        <input type="submit" value="insert ticketsale" , name="insert_ticketsale" />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseTicketsales()"
+        />
+      </form>
+    </div>
+    <!-- insert -->
+    <p>&nbsp;</p>
+
+    <div id="update">
+      <form method="POST" id="UpdateTicketsale">
+        <legend><strong>Update Ticketsale</strong></legend>
+        <fieldset class="fields">
+          <input type="hidden" name="method" value="put" />
+            <input
+            type="hidden"
+            name="sale_number"
+            id="update_ticketsale_id"
+            value=""
+          />
+          <label>sale number:</label><span id="update_id"></span>
+          <label> sale date </label>
+          <input type="text" id="update_sale_date" name="sale_date" value="" />
+          <label> amount paid </label>
+          <input type="text" id="update_amount_paid" name="amount_paid" value="" />
+          <label> customer ID </label>
+          <select id="update_customer_id" name="customer_id">
+            <option value="0">&nbsp;</option>
+            {% for cus in customer_data %}
+            <option value="{{cus['customer_id']}}">{{cus['customer_id']}}</option>
+            {% endfor %}
+          </select>
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="update_ticketsale"
+          value="Update Ticketsale"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseTicketsales()"
+        />
+      </form>
+    </div>
+    <!-- update -->
+    <p>&nbsp;</p>
+
+    <div id="delete" style="display: block">
+      <form method="POST" id="deleteTicketsale">
+        <legend><strong>Delete Ticketsale</strong></legend>
+         <fieldset class="fields">
+          <p>Are you sure you wish to delete the following?</p>
+          <input type="hidden" name="method" value="delete" />
+          <input
+            type="hidden"
+            name="sale_number"
+            id="delete_ticketsale_id"
+            value=""
+          />
+          <label><strong>ID:</strong> </label><span id="delete_id"></span>
+          <label> <strong>Sale Date:</strong> </label><span id="delete_sale_date"></span>
+          <label> <strong>Amount Paid:</strong> </label><span id="delete_amount_paid"></span>
+          <label> <strong>Customer ID:</strong> </label><span id="delete_customer_id"></span>
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="delete_ticketsale"
+          value="Delete Ticketsale"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onClick="browseTicketsales()"
+        />
+      </form>
+    </div>
+  </body>
+</html>

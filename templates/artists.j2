@@ -1,0 +1,240 @@
+<html>
+  <head>
+    <title>Artists</title>
+    <script language="JavaScript">
+      function showform(dowhat) {
+
+        if (dowhat == "insert") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "update") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "none";
+        } else if (dowhat == "delete") {
+          document.getElementById("browse").style.display = "none";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "block";
+        } else if (dowhat == "all") {
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "block";
+          document.getElementById("update").style.display = "block";
+          document.getElementById("delete").style.display = "block";
+        } else {
+          //by default display browse
+          document.getElementById("browse").style.display = "block";
+          document.getElementById("insert").style.display = "none";
+          document.getElementById("update").style.display = "none";
+          document.getElementById("delete").style.display = "none";
+        }
+      }
+      function newArtist() {
+        showform("insert");
+      }
+
+      function updateArtist(pid) {
+        var table = document.getElementById("Artist_table");
+        var data = table.getElementsByTagName("td");
+
+        for (var i = 2; i < data.length; i += 6) {
+          if (data[i].innerText == pid) {
+            var artist_name = data[i + 1].innerText;
+            var email = data[i + 2].innerText;
+            var phone_number = data[i + 3].innerText;
+
+            document.getElementById("update_artist_id").value = pid;
+            document.getElementById("update_id").innerText = ` ${pid} `;
+            document.getElementById("update_artist_name").value = artist_name;
+            document.getElementById("update_email").value = email;
+            document.getElementById("update_phone_number").value = phone_number;
+            break;
+          }
+        }
+
+        showform("update");
+      }
+
+      function deleteArtist(pid) {
+        var table = document.getElementById("Artist_table");
+        var data = table.getElementsByTagName("td");
+
+        for (var i = 2; i < data.length; i += 6) {
+          if (data[i].innerText == pid) {
+            var artist_name = data[i + 1].innerText;
+            var email = data[i + 2].innerText;
+            var phone_number = data[i + 3].innerText;
+
+            document.getElementById("delete_artist_id").value = pid;
+            document.getElementById("delete_id").innerText = pid;
+            document.getElementById("delete_artist_name").innerText = artist_name;
+            document.getElementById("delete_email").innerText = email;
+            document.getElementById("delete_phone_number").innerText = phone_number;
+          }
+        }
+
+        showform("delete");
+      }
+
+      function browseArtists() {
+        showform("browse");
+      }
+      function showAll() {
+        showform("all");
+      }
+    </script>
+  </head>
+
+  <body onload="browseArtists()">
+    <div>
+      <a href="/artists">Artists </a> | <a href="/artists">Artists </a> |
+      <a href="/customers">Customers</a> | <a href="/concerts">Concerts</a> |
+      <a href="/ticketsales">TicketSales</a> |
+      <a href="/concerts_ticketsales">Concerts_TicketSales</a>
+    </div>
+
+    <h1>Artists</h1>
+    <div id="browse">
+
+      {% if not artists %}
+      <table id="Artist_table" border="1" cellpadding="5">
+        <tr>
+          <th><a href="#" onclick="newArtist()">New</a></th>
+          <th></th>
+          <th>ID</th>
+          <th>Artist Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+        </tr>
+        <tr></tr>
+      </table>
+
+      {% else %}
+      <table id="Artist_table" border="1" cellpadding="5">
+        <thead>
+          <tr>
+            <th><a href="#" onclick="newArtist()">New</a></th>
+            <th></th>
+            <th>ID</th>
+            <th>Artist Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for item in artists %} {% set art_id = item['artist_id'] %}
+          <tr>
+            <td>
+              <a href="#" onclick="updateArtist('{{art_id}}')">Edit</a>
+            </td>
+            <td>
+              <a href="#" onclick="deleteArtist('{{art_id}}')">Delete</a>
+            </td>
+            <td>{{item['artist_id']}}</td>
+            <td>{{item['artist_name']}}</td>
+            <td>{{item['email']}}</td>
+            <td>{{item['phone_number']}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+
+      <p>&nbsp;</p>
+    </div>
+    <!-- browse -->
+
+    <div id="insert">
+      <form id="insert_artist" action="/artists" method="post">
+        <legend><strong>Add Artist</strong></legend>
+        <fieldset class="fields">
+          <label> artist name </label> <input type="text" name="artist_name" />
+          <label> email </label> <input type="text" name="email" />
+          <label> phone number </label>
+          <input type="text" name="phone_number" />
+        </fieldset>
+        <input type="submit" value="insert Artist" , name="insert_artist" />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseArtists()"
+        />
+      </form>
+    </div>
+    <!-- insert -->
+    <p>&nbsp;</p>
+
+    <div id="update">
+      <form method="POST" id="UpdateArtist">
+        <legend><strong>Update Artist</strong></legend>
+        <fieldset class="fields">
+          <input type="hidden" name="method" value="put" />
+          <input
+            type="hidden"
+            name="artist_id"
+            id="update_artist_id"
+            value=""
+          />
+          <label>artist ID:</label><span id="update_id"></span>
+          <label> artist_name: </label>
+          <input type="text" id="update_artist_name" name="artist_name" value="" />
+          <label> email: </label>
+          <input type="text" id="update_email" name="email" value="" />
+          <label> phone number: </label>
+          <input
+            type="text"
+            id="update_phone_number"
+            name="phone_number"
+            value=""
+          />
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="UpdateArtist"
+          value="Update Artist"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseArtists()"
+        />
+      </form>
+    </div>
+    <!-- update -->
+    <p>&nbsp;</p>
+
+    <div id="delete" style="display: block">
+      <form method="POST" id="deleteArtist">
+        <legend><strong>Delete Artist</strong></legend>
+        <fieldset class="fields">
+          <p>Are you sure you wish to delete the following?</p>
+          <input type="hidden" name="method" value="delete" />
+          <input type="hidden" name="artist_id" id="delete_artist_id" value="" />
+          <label><strong>ID:</strong> </label><span id="delete_id"></span>
+          <label> <strong>Artist Name:</strong> </label><span id="delete_artist_name"></span>
+          <label> <strong>Email:</strong> </label><span id="delete_email"></span>
+          <label> <strong>Phone Number:</strong> </label><span id="delete_phone_number"></span>
+        </fieldset>
+        <input
+          class="btn"
+          type="submit"
+          id="DeleteArtist"
+          value="Delete Artist"
+        />
+        <input
+          class="btn"
+          type="button"
+          value="cancel"
+          onclick="browseArtists()"
+        />
+      </form>
+    </div>
+  </body>
+</html>
