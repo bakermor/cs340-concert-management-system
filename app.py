@@ -76,9 +76,50 @@ def venues():
             return redirect("/venues")
 
 #artists Page
-@app.route("/artists")
+@app.route("/artists", methods=['POST', 'GET'])
 def artists():
-    return render_template("artists.html")
+    # READ
+    if request.method == 'GET':
+        # SQL select table data
+        query = 'SELECT * FROM Artists;'
+        artist_data = connect(query)
+        # render table through .j2 file
+        return render_template('artists.j2', artists=artist_data)
+
+    # CREATE
+    elif request.method == 'POST':
+         # user clicks 'new'
+        if request.form.get('insert_artist'):
+            artist_name = request.form['artist_name']
+            email = request.form['email']
+            phone_number = request.form['phone_number']
+            # insert new row 
+            query = 'INSERT INTO Artists (artist_name, email, phone_number) VALUES (%s, %s, %s);'
+            values = (artist_name, email, phone_number)
+            connect(query, values)
+            # redirect
+            return redirect("/artists")
+        
+        if request.form["method"] == "put":
+            artist_id = int(request.form["artist_id"])
+            artist_name = request.form["artist_name"]
+            email = request.form["email"]
+            phone_number = request.form["phone_number"]
+
+            command = "UPDATE Artists SET artist_name = %s, email = %s, phone_number = %s WHERE artist_id = %s;"
+            values = (artist_name, email, phone_number, artist_id)
+            connect(command, values)
+            return redirect("/artists")
+        
+        if request.form["method"] == "delete":
+            artist_id = int(request.form["artist_id"])
+
+            command = "DELETE FROM Artists WHERE artist_id = %s"
+            values = (artist_id,)
+            connect(command, values)
+            return redirect("/artists")
+
+    return render_template("artists.j2")
 
 # customers Page
 @app.route("/customers", methods=["GET", "POST"])
@@ -180,9 +221,50 @@ def concerts():
             return redirect("/concerts")
 
 # ticketsales Page
-@app.route("/ticketsales")
+@app.route("/ticketsales", methods=["GET", "POST", "PUT"])
 def ticketsales():
-    return render_template("ticketsales.html")
+    # request.form['input_name'] -> <input name="input_name">
+    # READ
+    if request.method == 'GET':
+        query = 'SELECT * FROM TicketSales;'
+        ticketsales_data = connect(query)
+        query = 'SELECT customer_id FROM Customers;'
+        customer_data = connect(query)
+        # render table through .j2 file
+        return render_template('ticketsales.j2', ticketsales_data=ticketsales_data, customer_data=customer_data)
+    # CREATE
+    elif request.method == 'POST':
+        # insert
+        if request.form.get('insert_ticketsale'):
+            # form input
+            sale_date = request.form['sale_date']
+            amount_paid = request.form['amount_paid']
+            customer_id = int(request.form['customer_id'])
+            # insert new row 
+            query = 'INSERT INTO TicketSales (sale_date, amount_paid, customer_id) VALUES (%s, %s, %s);'
+            values = (sale_date, amount_paid, customer_id)
+            connect(query, values)
+            # redirect
+            return redirect("/ticketsales")
+        # update
+        if request.form["method"] == "put":
+            # form input
+            sale_number = request.form["sale_number"]
+            sale_date = request.form["sale_date"]
+            amount_paid = request.form["amount_paid"] 
+            customer_id = int(request.form["customer_id"])
+            # # update row
+            command = "UPDATE TicketSales SET sale_date = %s, amount_paid = %s, customer_id = %s WHERE sale_number = %s;"
+            values = (sale_date, amount_paid, customer_id, sale_number)
+            connect(command, values)
+            return redirect("/ticketsales")
+        # delete row
+        if request.form["method"] == "delete":
+            sale_number = int(request.form["sale_number"])
+            command = "DELETE FROM TicketSales WHERE sale_number = %s"
+            values = (sale_number,)
+            connect(command, values)
+            return redirect("/ticketsales")
 
 # intersection Page
 @app.route("/concerts_ticketsales", methods=["GET", "POST"])
