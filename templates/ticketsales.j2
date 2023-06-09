@@ -161,11 +161,11 @@
       <form id="insert_ticketsale" action="/ticketsales" method="post">
         <legend><strong>Add Ticketsale</strong></legend>
         <fieldset class="fields">
-          <label> sale date </label> <input type="text" name="sale_date" />
-          <label> amount paid </label> <input type="text" name="amount_paid" />
+          <label> sale date </label> <input type="date" name="sale_date" required/>
+          <label> amount paid </label> <input type="text" name="amount_paid" required/>
           <label> customer_id </label>
-          <select name="customer_id">
-            <option value="0">&nbsp;</option>
+          <select name="customer_id" required>
+            <option value="">&nbsp;</option>
             {% for cus in customer_data %}
             <option value="{{cus['customer_id']}}">{{cus['customer_id']}}</option>
             {% endfor %}
@@ -196,12 +196,12 @@
           />
           <label>sale number:</label><span id="update_id"></span>
           <label> sale date </label>
-          <input type="text" id="update_sale_date" name="sale_date" value="" />
+          <input type="date" id="update_sale_date" name="sale_date" value="" required/>
           <label> amount paid </label>
-          <input type="text" id="update_amount_paid" name="amount_paid" value="" />
+          <input type="text" id="update_amount_paid" name="amount_paid" value="" required/>
           <label> customer ID </label>
-          <select id="update_customer_id" name="customer_id">
-            <option value="0">&nbsp;</option>
+          <select id="update_customer_id" name="customer_id" required>
+            <option value="">&nbsp;</option>
             {% for cus in customer_data %}
             <option value="{{cus['customer_id']}}">{{cus['customer_id']}}</option>
             {% endfor %}
