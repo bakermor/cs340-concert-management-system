@@ -152,10 +152,10 @@
       <form id="insert_artist" action="/artists" method="post">
         <legend><strong>Add Artist</strong></legend>
         <fieldset class="fields">
-          <label> artist name </label> <input type="text" name="artist_name" />
-          <label> email </label> <input type="text" name="email" />
+          <label> artist name </label> <input type="text" name="artist_name" required/>
+          <label> email </label> <input type="email" name="email" required/>
           <label> phone number </label>
-          <input type="text" name="phone_number" />
+          <input type="text" name="phone_number" required/>
         </fieldset>
         <input type="submit" value="insert Artist" , name="insert_artist" />
         <input
@@ -182,15 +182,16 @@
           />
           <label>artist ID:</label><span id="update_id"></span>
           <label> artist_name: </label>
-          <input type="text" id="update_artist_name" name="artist_name" value="" />
+          <input type="text" id="update_artist_name" name="artist_name" value="" required/>
           <label> email: </label>
-          <input type="text" id="update_email" name="email" value="" />
+          <input type="email" id="update_email" name="email" value="" required/>
           <label> phone number: </label>
           <input
             type="text"
             id="update_phone_number"
             name="phone_number"
             value=""
+            required
           />
         </fieldset>
         <input
