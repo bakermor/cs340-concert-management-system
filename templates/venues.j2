@@ -156,11 +156,11 @@
       <form id="insert_venue" action="/venues" method="post">
         <legend><strong>Add Venue</strong></legend>
         <fieldset class="fields">
-          <label> address </label> <input type="text" name="address" />
-          <label> capacity </label> <input type="text" name="capacity" />
-          <label> email </label> <input type="text" name="email" />
+          <label> address </label> <input type="text" name="address" required/>
+          <label> capacity </label> <input type="text" name="capacity" required/>
+          <label> email </label> <input type="email" name="email" required/>
           <label> phone number </label>
-          <input type="text" name="phone_number" />
+          <input type="text" name="phone_number" required/>
         </fieldset>
         <input type="submit" value="insert venue" , name="insert_venue" />
         <input
@@ -179,14 +179,14 @@
         <legend><strong>Update Venue</strong></legend>
         <fieldset class="fields">
           <input type="hidden" name="method" value="put" />
-          <input type="hidden" name="venue_id" id="update_venue_id" value="" />
+          <input type="hidden" name="venue_id" id="update_venue_id" value="" required/>
           <label id="update_id"> ID: </label>
           <label> address: </label>
-          <input type="text" id="update_address" name="address" value="" />
+          <input type="text" id="update_address" name="address" value="" required/>
           <label> capacity: </label>
-          <input type="text" id="update_capacity" name="capacity" value="" />
+          <input type="text" id="update_capacity" name="capacity" value="" required/>
           <label> email: </label>
-          <input type="text" id="update_email" name="email" value="" />
+          <input type="email" id="update_email" name="email" value="" required/>
           <label> phone number: </label>
           <input
             type="text"
