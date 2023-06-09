@@ -2,12 +2,12 @@ from flask import Flask, redirect, url_for, render_template, request
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
-port_number = 25693
+port_number = 25987
 
-app.config['MYSQL_HOST'] = "classmysql.engr.oregonstate.edu"
-app.config['MYSQL_USER'] = "cs340_bakermor"
-app.config['MYSQL_PASSWORD'] = "0384"
-app.config['MYSQL_DB'] = "cs340_bakermor"
+app.config['MYSQL_HOST'] = ""
+app.config['MYSQL_USER'] = ""
+app.config['MYSQL_PASSWORD'] = ""
+app.config['MYSQL_DB'] = ""
 app.config['MYSQL_CURSORCLASS'] = "DictCursor"
 
 mysql = MySQL(app)
