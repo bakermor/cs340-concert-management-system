@@ -143,15 +143,15 @@
         <legend><strong>Add Concert Sale</strong></legend>
         <fieldset class="fields">
           <label> sale number </label>
-          <select name="sale_number">
-            <option value="0">&nbsp;</option>
+          <select name="sale_number" required>
+            <option value="">&nbsp;</option>
             {% for sale in tickets %}
             <option value="{{sale['sale_number']}}">{{sale['sale_number']}}</option>
             {% endfor %}
           </select>
           <label> concert id </label>
-          <select name="concert_id">
-            <option value="0">&nbsp;</option>
+          <select name="concert_id" required>
+            <option value="">&nbsp;</option>
             {% for concert in concerts %}
             <option value="{{concert['concert_id']}}">{{concert['concert_id']}}</option>
             {% endfor %}
@@ -177,15 +177,15 @@
           <input type="hidden" name="concert_sale_id" id="update_concert_sale_id" value="" />
           <label id="update_id"> ID: </label>
           <label> sale number </label>
-          <select id="update_sale_number" name="sale_number">
-            <option value="0">&nbsp;</option>
+          <select id="update_sale_number" name="sale_number" required>
+            <option value="">&nbsp;</option>
             {% for sale in tickets %}
             <option value="{{sale['sale_number']}}">{{sale['sale_number']}}</option>
             {% endfor %}
           </select>
           <label> concert id </label>
-          <select id="update_concert_id" name="concert_id">
-            <option value="0">&nbsp;</option>
+          <select id="update_concert_id" name="concert_id" required>
+            <option value="">&nbsp;</option>
             {% for concert in concerts %}
             <option value="{{concert['concert_id']}}">{{concert['concert_id']}}</option>
             {% endfor %}
