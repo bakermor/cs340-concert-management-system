@@ -151,11 +151,11 @@
       <form id="insert_customer" action="/customers" method="post">
         <legend><strong>Add Customer</strong></legend>
         <fieldset class="fields">
-          <label> first name </label> <input type="text" name="first_name" />
-          <label> last name </label> <input type="text" name="last_name" />
-          <label> email </label> <input type="text" name="email" />
+          <label> first name </label> <input type="text" name="first_name" required/>
+          <label> last name </label> <input type="text" name="last_name" required/>
+          <label> email </label> <input type="email" name="email" required/>
           <label> phone number </label>
-          <input type="text" name="phone_number" />
+          <input type="text" name="phone_number"/>
         </fieldset>
         <input type="submit" value="insert customer" name="insert_customer" />
         <input
@@ -187,11 +187,12 @@
             id="update_first_name"
             name="first_name"
             value=""
+            required
           />
           <label> last name: </label>
-          <input type="text" id="update_last_name" name="last_name" value="" />
+          <input type="text" id="update_last_name" name="last_name" value="" required/>
           <label> email: </label>
-          <input type="text" id="update_email" name="email" value="" />
+          <input type="email" id="update_email" name="email" value="" required/>
           <label> phone number: </label>
           <input
             type="text"
